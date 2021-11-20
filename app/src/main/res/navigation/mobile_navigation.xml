@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.juegofinal.ui.home.HomeFragment"
+        android:label="Juego"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.juegofinal.ui.gallery.GalleryFragment"
+        android:label="Salon de la fama"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.example.juegofinal.ui.slideshow.SlideshowFragment"
+        android:label="Configuración"
+        tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_cerrarsesion"
+        android:name="com.example.juegofinal.ui.cerrarSesion.slideshow.CerrarSesionFragment"
+        android:label="Cerrar Sesión"
+        tools:layout="@layout/fragment_cerrar_sesion" />
+
+</navigation>
