@@ -4,6 +4,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,7 +37,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     MediaPlayer mMediaPlayer;
     int mCurrentVideoPosition;
 
-    Button btnStart;
+    Button btnStart,btnLeft,btnRight;
     ImageView nave;
     TextView tvPuntaje;
 
@@ -61,14 +62,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         videoBG.setVideoURI(uri);
         // Start the VideoView
         videoBG.start();
-
         btnStart = root.findViewById(R.id.btnStart);
+        btnLeft = root.findViewById(R.id.buttonLeft);
+        btnRight = root.findViewById(R.id.buttonRight);
         btnStart.setOnClickListener(this);
-
+        btnRight.setOnTouchListener(this::moverNaveIzq);
+        btnLeft.setOnTouchListener(this::moverNaveDer);
         nave = root.findViewById(R.id.nave);
         tvPuntaje = root.findViewById(R.id.tvPuntaje);
-
-        
 
         //final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -79,6 +80,42 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
         return root;
     }
+
+    private boolean moverNaveDer(View view, MotionEvent motionEvent) {
+
+        if(motionEvent.getAction() == MotionEvent.ACTION_UP ||
+           motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            //3
+            if( nave.getX() - 20f < -39.00) {
+                nave.setX(-39.00f);
+            }
+            else {
+                nave.setX(nave.getX() - 20f);
+            }
+        }
+
+        return true;
+    }
+    // Inicial 399.0
+    //837.00 Derecha
+    // -39 Izquierda
+    private boolean moverNaveIzq(View view, MotionEvent motionEvent) {
+        if(motionEvent.getAction() == MotionEvent.ACTION_UP ||
+                motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            if( nave.getX() + 20f > 837.00) {
+                nave.setX(837.00f);
+
+            }
+            else {
+                nave.setX(nave.getX() + 20f);
+            }
+        }
+
+
+        return true;
+    }
+    //nave.setX(nave.getX() - 3f);
+    
 
     @Override
     public void onPause() {
@@ -96,11 +133,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         btnStart.setVisibility(View.INVISIBLE);
+        btnLeft.setVisibility(View.VISIBLE);
+        btnRight.setVisibility(View.VISIBLE);
         nave.setVisibility(View.VISIBLE);
+        Toast.makeText(getContext(), String.valueOf(nave.getX()), Toast.LENGTH_LONG).show();
         //Juego j = new Juego();
         //j.start();
 
     }
+
 
     public class Juego extends Thread{
 
