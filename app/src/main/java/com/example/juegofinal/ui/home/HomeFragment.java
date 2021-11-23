@@ -131,24 +131,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnLeft.setVisibility(View.VISIBLE);
         btnRight.setVisibility(View.VISIBLE);
         nave.setVisibility(View.VISIBLE);
-        //Contador j = new Contador();
-        //j.start();
+        Contador j = new Contador();
+        j.start();
 
     }
 
 
     public class Contador extends Thread{
+        private int contador = 0;
+
+        public int getContador() {
+            return this.contador;
+        }
+
+        public void setContador(int contador) {
+            this.contador = contador;
+        }
 
         public Contador() {
         }
 
         public void run() {
             new Timer().scheduleAtFixedRate(new TimerTask(){
-                int points = 0;
                 @Override
                 public void run(){
-                    tvPuntaje.setText(String.valueOf(this.points));
-                    points++;
+                    tvPuntaje.setText(String.valueOf(getContador()));
+                    setContador(getContador() + 1 );
                 }
             },1000,1000);
 
