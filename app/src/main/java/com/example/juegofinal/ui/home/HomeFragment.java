@@ -41,7 +41,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     Button btnStart,btnLeft,btnRight;
     ImageView nave;
     TextView tvPuntaje;
-
+    Contador j;
+    Meteoros m;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +67,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnStart = root.findViewById(R.id.btnStart);
         btnLeft = root.findViewById(R.id.buttonLeft);
         btnRight = root.findViewById(R.id.buttonRight);
+        j = new Contador();
+        m = new Meteoros();
         btnStart.setOnClickListener(this);
         btnRight.setOnTouchListener(this::moverNaveIzq);
         btnLeft.setOnTouchListener(this::moverNaveDer);
@@ -132,15 +135,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnLeft.setVisibility(View.VISIBLE);
         btnRight.setVisibility(View.VISIBLE);
         nave.setVisibility(View.VISIBLE);
-        Contador j = new Contador();
-        Meteoros m = new Meteoros();
         j.start();
         m.start();
     }
 
 
     public class Contador extends Thread {
-        private int contador = 0;
+        public int contador = 0;
 
         public int getContador() {
             return this.contador;
@@ -171,6 +172,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         public Meteoros() { }
 
         public void run() {
+
+            new Timer().scheduleAtFixedRate(new TimerTask(){
+                @Override
+                public void run(){
+                    generarMeteoro();
+                }
+            },1000,5000);
+
+
+
+        }
+
+        private void generarMeteoro() {
             getActivity().runOnUiThread(new Runnable() {
 
                 @Override
@@ -189,17 +203,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         public void run(){
 
                             meteoro.setY(meteoro.getY()+ 1);
-                            if(meteoro.getY() > getView().getWidth() ) {
+                            if(meteoro.getY() > getView().getHeight() + 180 ) {
                                 meteoro.setVisibility(View.INVISIBLE);
+                                j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
+                                try{
+                                    this.cancel();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+
+
                             }
                         }
                     },10,10);
                 }
             });
-
-
-
-
 
         }
 
