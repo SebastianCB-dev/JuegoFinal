@@ -1,5 +1,6 @@
 package com.example.juegofinal.ui.home;
 
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -132,12 +133,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnRight.setVisibility(View.VISIBLE);
         nave.setVisibility(View.VISIBLE);
         Contador j = new Contador();
+        Meteoros m = new Meteoros();
         j.start();
-
+        m.start();
     }
 
 
-    public class Contador extends Thread{
+    public class Contador extends Thread {
         private int contador = 0;
 
         public int getContador() {
@@ -148,8 +150,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             this.contador = contador;
         }
 
-        public Contador() {
-        }
+        public Contador() { }
 
         public void run() {
             new Timer().scheduleAtFixedRate(new TimerTask(){
@@ -162,6 +163,42 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         }
 
+
+    }
+
+    public class Meteoros extends Thread {
+
+        public Meteoros() { }
+
+        public void run() {
+            getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    // Generar Randomico
+                    // Generate random number between 5 to 30
+                    double a = 1 + (Math.random() * getView().getWidth() - 1);
+                    String randomico = String.valueOf(a);
+                    ImageView meteoro = new ImageView(getContext());
+                    meteoro.setX(Float.parseFloat(randomico));
+                    meteoro.setY(240);
+                    meteoro.setImageResource(R.drawable.asteroid);
+                    getActivity().addContentView(meteoro, new ViewGroup.LayoutParams(100, 100));
+
+                    new Timer().scheduleAtFixedRate(new TimerTask(){
+                        @Override
+                        public void run(){
+                            meteoro.setY(meteoro.getY()+ 30);
+                        }
+                    },1000,1000);
+                }
+            });
+
+
+
+
+
+        }
 
     }
 
