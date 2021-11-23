@@ -176,7 +176,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void run() {
                     // Generar Randomico
-                    // Generate random number between 5 to 30
                     double a = 1 + (Math.random() * getView().getWidth() - 1);
                     String randomico = String.valueOf(a);
                     ImageView meteoro = new ImageView(getContext());
@@ -188,9 +187,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     new Timer().scheduleAtFixedRate(new TimerTask(){
                         @Override
                         public void run(){
-                            meteoro.setY(meteoro.getY()+ 30);
+
+                            meteoro.setY(meteoro.getY()+ 1);
+                            if(meteoro.getY() > getView().getWidth() ) {
+                                meteoro.setVisibility(View.INVISIBLE);
+                            }
                         }
-                    },1000,1000);
+                    },10,10);
                 }
             });
 
