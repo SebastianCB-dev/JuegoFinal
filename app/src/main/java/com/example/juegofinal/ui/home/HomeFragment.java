@@ -85,7 +85,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         if(motionEvent.getAction() == MotionEvent.ACTION_UP ||
            motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            //3
             if( nave.getX() - 20f < -39.00) {
                 nave.setX(-39.00f);
             }
@@ -96,9 +95,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         return true;
     }
-    // Inicial 399.0
-    //837.00 Derecha
-    // -39 Izquierda
+
     private boolean moverNaveIzq(View view, MotionEvent motionEvent) {
         if(motionEvent.getAction() == MotionEvent.ACTION_UP ||
                 motionEvent.getAction() == MotionEvent.ACTION_UP) {
@@ -110,7 +107,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 nave.setX(nave.getX() + 20f);
             }
         }
-
 
         return true;
     }
