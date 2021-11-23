@@ -83,8 +83,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private boolean moverNaveDer(View view, MotionEvent motionEvent) {
 
-        if(motionEvent.getAction() == MotionEvent.ACTION_UP ||
-           motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
             if( nave.getX() - 20f < -39.00) {
                 nave.setX(-39.00f);
             }
@@ -97,8 +96,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private boolean moverNaveIzq(View view, MotionEvent motionEvent) {
-        if(motionEvent.getAction() == MotionEvent.ACTION_UP ||
-                motionEvent.getAction() == MotionEvent.ACTION_UP) {
+        if(motionEvent.getAction() == MotionEvent.ACTION_UP
+        ) {
             if( nave.getX() + 20f > 837.00) {
                 nave.setX(837.00f);
 
@@ -132,16 +131,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnLeft.setVisibility(View.VISIBLE);
         btnRight.setVisibility(View.VISIBLE);
         nave.setVisibility(View.VISIBLE);
-        Toast.makeText(getContext(), String.valueOf(nave.getX()), Toast.LENGTH_LONG).show();
-        //Juego j = new Juego();
+        //Contador j = new Contador();
         //j.start();
 
     }
 
 
-    public class Juego extends Thread{
+    public class Contador extends Thread{
 
-        public Juego() {
+        public Contador() {
         }
 
         public void run() {
