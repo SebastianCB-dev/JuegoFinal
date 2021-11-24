@@ -208,7 +208,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     meteoro.getHitRect(R2);
 
                                     if (Rect.intersects(R1, R2)) {
-
+                                        j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 1000;
                                     }
 
                                     if(meteoro.getY() > getView().getHeight() + 180 ) {
