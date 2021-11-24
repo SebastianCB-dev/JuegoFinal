@@ -1,5 +1,6 @@
 package com.example.juegofinal.ui.home;
 
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -173,51 +174,61 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         public void run() {
 
-            new Timer().scheduleAtFixedRate(new TimerTask(){
-                @Override
-                public void run(){
-                    generarMeteoro();
-                }
-            },1000,5000);
+                    getActivity().runOnUiThread(new Runnable() {
 
-
-
-        }
-
-        private void generarMeteoro() {
-            getActivity().runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    // Generar Randomico
-                    double a = 1 + (Math.random() * getView().getWidth() - 1);
-                    String randomico = String.valueOf(a);
-                    ImageView meteoro = new ImageView(getContext());
-                    meteoro.setX(Float.parseFloat(randomico));
-                    meteoro.setY(240);
-                    meteoro.setImageResource(R.drawable.asteroid);
-                    getActivity().addContentView(meteoro, new ViewGroup.LayoutParams(100, 100));
-
-                    new Timer().scheduleAtFixedRate(new TimerTask(){
                         @Override
-                        public void run(){
+                        public void run() {
+                            // Generar Randomico
+                            double a = 1 + (Math.random() * getView().getWidth() - 1);
+                            String randomico = String.valueOf(a);
+                            ImageView meteoro = new ImageView(getContext());
+                            meteoro.setX(Float.parseFloat(randomico));
+                            meteoro.setY(240);
+                            meteoro.setImageResource(R.drawable.asteroid);
+                            getActivity().addContentView(meteoro, new ViewGroup.LayoutParams(100, 100));
 
-                            meteoro.setY(meteoro.getY()+ 1);
-                            if(meteoro.getY() > getView().getHeight() + 180 ) {
-                                meteoro.setVisibility(View.INVISIBLE);
-                                j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
-                                try{
-                                    this.cancel();
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
+                            new Timer().scheduleAtFixedRate(new TimerTask(){
+                                @Override
+                                public void run(){
+                                    meteoro.setY(meteoro.getY()+ 1);
+                                    //Choque
+                                    // Dimension de nave:    X: 106   Y:80
+                                    // Dimension de meteoro: X: 100   Y:100
+                                    Rect R1=new Rect(
+                                            Math.round(nave.getX() - 53),
+                                            Math.round(nave.getY() + 40),
+                                            Math.round(nave.getX() + 53),
+                                            Math.round(nave.getY() - 40));
+                                    nave.getHitRect(R1);
+                                    Rect R2=new Rect(
+                                            Math.round(meteoro.getX() - 50),
+                                            Math.round(meteoro.getY() + 50),
+                                            Math.round(meteoro.getX() + 50),
+                                            Math.round(meteoro.getY() - 50));
+                                    meteoro.getHitRect(R2);
+
+                                    if (Rect.intersects(R1, R2)) {
+
+                                    }
+
+                                    if(meteoro.getY() > getView().getHeight() + 180 ) {
+                                        meteoro.setVisibility(View.INVISIBLE);
+                                        j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
+                                        try{
+                                            this.cancel();
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+
+                                    }
                                 }
-
-
-                            }
+                            },10,10);
                         }
-                    },10,10);
-                }
-            });
+                    });
+
+
+
+
 
         }
 
