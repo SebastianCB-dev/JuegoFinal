@@ -68,12 +68,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnStart = root.findViewById(R.id.btnStart);
         btnLeft = root.findViewById(R.id.buttonLeft);
         btnRight = root.findViewById(R.id.buttonRight);
+        nave = new ImageView(getContext());
+        nave.setImageResource(R.drawable.nave);
+        nave.setVisibility(View.INVISIBLE);
+        getActivity().addContentView(nave, new ViewGroup.LayoutParams(200, 200));
         j = new Contador();
         m = new Meteoros();
         btnStart.setOnClickListener(this);
         btnRight.setOnTouchListener(this::moverNaveIzq);
         btnLeft.setOnTouchListener(this::moverNaveDer);
-        nave = root.findViewById(R.id.nave);
         tvPuntaje = root.findViewById(R.id.tvPuntaje);
 
         //final TextView textView = binding.textHome;
@@ -135,6 +138,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnStart.setVisibility(View.INVISIBLE);
         btnLeft.setVisibility(View.VISIBLE);
         btnRight.setVisibility(View.VISIBLE);
+        nave.setX(420);
+        nave.setY(1500);
         nave.setVisibility(View.VISIBLE);
         j.start();
         m.start();
@@ -179,11 +184,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void run() {
                             // Generar Randomico
-                            double a = 1 + (Math.random() * getView().getWidth() - 1);
+                            double a = 100 + (Math.random() * getView().getWidth() - 100);
                             String randomico = String.valueOf(a);
                             ImageView meteoro = new ImageView(getContext());
                             meteoro.setX(Float.parseFloat(randomico));
                             meteoro.setY(240);
+                            meteoro.setTop(100);
+                            meteoro.setRight(100);
                             meteoro.setImageResource(R.drawable.asteroid);
                             getActivity().addContentView(meteoro, new ViewGroup.LayoutParams(100, 100));
 
@@ -194,19 +201,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     //Choque
                                     // Dimension de nave:    X: 106   Y:80
                                     // Dimension de meteoro: X: 100   Y:100
-                                    Rect R1=new Rect(
-                                            Math.round(nave.getX()) - 53,
-                                            Math.round(nave.getX()) + 40,
-                                            Math.round(nave.getX()) + 53,
-                                            Math.round(nave.getX()) - 40) ;
+                                    Rect R1 = new Rect();
+
                                     nave.getHitRect(R1);
-                                    Rect R2=new Rect(
-                                            Math.round(meteoro.getX()) - 50,
-                                            Math.round(meteoro.getX()) + 50,
-                                            Math.round(meteoro.getX()) + 50,
-                                            Math.round(meteoro.getX()) - 50);
+
+                                    Rect R2=new Rect();
                                     meteoro.getHitRect(R2);
-                                    if (R1.contains(R2)) {
+
+                                    if (Rect.intersects(R1,R2)) {
                                         j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 1000;
                                     }
 

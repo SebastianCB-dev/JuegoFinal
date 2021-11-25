@@ -43,20 +43,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-    <ImageView
-        android:id="@+id/nave"
-        android:layout_width="106dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="500dp"
-        android:src="@drawable/nave"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/nave"
-        tools:srcCompat="@drawable/nave" />
-
     <Button
         android:id="@+id/btnStart"
         android:layout_width="150dp"
