@@ -195,19 +195,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     // Dimension de nave:    X: 106   Y:80
                                     // Dimension de meteoro: X: 100   Y:100
                                     Rect R1=new Rect(
-                                            Math.round(nave.getX() - 53),
-                                            Math.round(nave.getY() + 40),
-                                            Math.round(nave.getX() + 53),
-                                            Math.round(nave.getY() - 40));
+                                            Math.round(nave.getX()) - 53,
+                                            Math.round(nave.getX()) + 40,
+                                            Math.round(nave.getX()) + 53,
+                                            Math.round(nave.getX()) - 40) ;
                                     nave.getHitRect(R1);
                                     Rect R2=new Rect(
-                                            Math.round(meteoro.getX() - 50),
-                                            Math.round(meteoro.getY() + 50),
-                                            Math.round(meteoro.getX() + 50),
-                                            Math.round(meteoro.getY() - 50));
+                                            Math.round(meteoro.getX()) - 50,
+                                            Math.round(meteoro.getX()) + 50,
+                                            Math.round(meteoro.getX()) + 50,
+                                            Math.round(meteoro.getX()) - 50);
                                     meteoro.getHitRect(R2);
-
-                                    if (Rect.intersects(R1, R2)) {
+                                    if (R1.contains(R2)) {
                                         j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 1000;
                                     }
 
