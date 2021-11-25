@@ -23,8 +23,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.transition.Visibility;
 
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.juegofinal.R;
+import com.example.juegofinal.User;
 import com.example.juegofinal.databinding.FragmentHomeBinding;
+import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -41,7 +51,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     Button btnStart,btnLeft,btnRight;
     ImageView nave;
-    TextView tvPuntaje;
+    TextView tvPuntaje, tvPuntajeFinal, tvGameOver, tvtuPuntajeFue;
     Contador j;
     Meteoros m;
 
@@ -78,6 +88,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnRight.setOnTouchListener(this::moverNaveIzq);
         btnLeft.setOnTouchListener(this::moverNaveDer);
         tvPuntaje = root.findViewById(R.id.tvPuntaje);
+        tvPuntajeFinal = root.findViewById(R.id.tvPuntajeFinal);
+        tvGameOver = root.findViewById(R.id.tvGameOver);
+        tvtuPuntajeFue = root.findViewById(R.id.tvTuPuntajeFue);
 
         //final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -148,9 +161,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public class Contador extends Thread {
         public int contador = 0;
-
+        public int aumento = 1;
         public int getContador() {
             return this.contador;
+        }
+
+        public int getAumento() {
+            return aumento;
+        }
+
+        public void setAumento(int aumento) {
+            this.aumento = aumento;
         }
 
         public void setContador(int contador) {
@@ -164,7 +185,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void run(){
                     tvPuntaje.setText(String.valueOf(getContador()));
-                    setContador(getContador() + 1 );
+                    setContador(getContador() + aumento );
                 }
             },1000,1000);
 
@@ -184,7 +205,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void run() {
                             // Generar Randomico
-                            double a = 100 + (Math.random() * getView().getWidth() - 100);
+                            double a = 1 + (Math.random() * getView().getWidth() - 150);
                             String randomico = String.valueOf(a);
                             ImageView meteoro = new ImageView(getContext());
                             meteoro.setX(Float.parseFloat(randomico));
@@ -208,8 +229,59 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                     Rect R2=new Rect();
                                     meteoro.getHitRect(R2);
 
+                                    //Colisión
                                     if (Rect.intersects(R1,R2)) {
-                                        j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 1000;
+                                        try {
+                                            this.cancel();
+                                            j.aumento = 0;
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    getActivity().findViewById(R.id.tvGameOver).setVisibility(View.VISIBLE);
+                                                    getActivity().findViewById(R.id.tvTuPuntajeFue).setVisibility(View.VISIBLE);
+                                                    tvPuntajeFinal.setText(String.valueOf(j.getContador()));
+                                                    getActivity().findViewById(R.id.tvPuntajeFinal).setVisibility(View.VISIBLE);
+
+                                                    String puntaje = String.valueOf(j.getContador());
+                                                    String id = User.id;
+                                                    String username = User.username;
+                                                    String url = "http://192.168.0.4/videojuego_moviles/score.php?username="+
+                                                           username.trim()+"&id="+
+                                                            id+"&points="+
+                                                            puntaje;
+                                                    url.replace(" ","%20");
+                                                    RequestQueue request;
+                                                    JsonObjectRequest jsonObjectRequest;
+                                                    request = Volley.newRequestQueue(getContext());
+                                                    jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this::scoreResponse, this::scoreResponseError);
+                                                    request.add(jsonObjectRequest);
+                                                }
+
+                                                private void scoreResponseError(VolleyError volleyError) {
+                                                    Snackbar.make(getView(), "Error al realizar la petición!", Snackbar.LENGTH_LONG)
+                                                            .setAction("Action", null).show();
+                                                }
+
+                                                private void scoreResponse(JSONObject jsonObject) {
+
+                                                    try {
+                                                        jsonObject.getJSONArray("user").getJSONObject(0).get("score_user_username").toString();
+                                                    } catch (JSONException e) {
+                                                        Snackbar.make(getView(), "Ocurrio un error contacte al administrador!", Snackbar.LENGTH_LONG)
+                                                                .setAction("Action", null).show();
+                                                    }
+
+                                                }
+
+                                            });
+
+
+
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
+
+
                                     }
 
                                     if(meteoro.getY() > getView().getHeight() + 180 ) {
