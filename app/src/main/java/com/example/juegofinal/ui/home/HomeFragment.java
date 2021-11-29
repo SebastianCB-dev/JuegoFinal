@@ -247,6 +247,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                             getActivity().runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    btnLeft.setVisibility(View.INVISIBLE);
+                                                    btnRight.setVisibility(View.INVISIBLE);
                                                     getActivity().findViewById(R.id.tvGameOver).setVisibility(View.VISIBLE);
                                                     getActivity().findViewById(R.id.tvTuPuntajeFue).setVisibility(View.VISIBLE);
                                                     tvPuntajeFinal.setText(String.valueOf(j.getContador()));
