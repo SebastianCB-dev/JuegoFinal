@@ -164,7 +164,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         j.setPriority(1);
         m.setPriority(2);
         j.start();
-        //m.start();
+        m.start();
     }
 
 
@@ -216,13 +216,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             // Generar Randomico
                             double a = 150 + (Math.random() * getView().getWidth() - 150);
                             String randomico = String.valueOf(a);
-                            ImageView meteoro = new ImageView(getActivity());
+                            ImageView meteoro = new ImageView(getActivity().getBaseContext());
+                            meteoro.setImageResource(R.drawable.asteroid);
                             meteoro.setX(Float.parseFloat(randomico));
                             meteoro.setY(240);
-                            meteoro.setTop(100);
-                            meteoro.setRight(100);
-                            meteoro.setImageResource(R.drawable.asteroid);
-                            getActivity().addContentView(meteoro, new ViewGroup.LayoutParams(100, 100));
+                            //meteoro.setTop(100);
+                            //meteoro.setRight(100);
+                            layout = (ViewGroup) getActivity().findViewById(R.id.constraint);
+                            layout.addView(meteoro,new ViewGroup.LayoutParams(100, 100));
 
                             new Timer().scheduleAtFixedRate(new TimerTask(){
                                 @Override
@@ -293,7 +294,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                                     }
 
-                                    if(meteoro.getY() > getView().getHeight() + 180 ) {
+                                    if(meteoro.getY() > getView().getHeight() - 30 ) {
                                         meteoro.setVisibility(View.INVISIBLE);
                                         j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
                                         try{
