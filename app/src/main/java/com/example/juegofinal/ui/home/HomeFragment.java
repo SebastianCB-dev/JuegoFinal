@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             ImageView meteoro = new ImageView(getActivity().getBaseContext());
                             meteoro.setImageResource(R.drawable.asteroid);
                             meteoro.setX(Float.parseFloat(randomico));
-                            meteoro.setY(240);
+                            meteoro.setY(50);
                             //meteoro.setTop(100);
                             //meteoro.setRight(100);
                             layout = (ViewGroup) getActivity().findViewById(R.id.constraint);
