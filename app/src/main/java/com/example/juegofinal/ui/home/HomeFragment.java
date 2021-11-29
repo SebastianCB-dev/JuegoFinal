@@ -17,6 +17,8 @@ import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.solver.state.State;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -54,6 +56,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     TextView tvPuntaje, tvPuntajeFinal, tvGameOver, tvtuPuntajeFue;
     Contador j;
     Meteoros m;
+    ViewGroup layout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -75,13 +78,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         videoBG.setVideoURI(uri);
         // Start the VideoView
         videoBG.start();
+
         btnStart = root.findViewById(R.id.btnStart);
         btnLeft = root.findViewById(R.id.buttonLeft);
         btnRight = root.findViewById(R.id.buttonRight);
-        nave = new ImageView(getContext());
+
+        nave = new ImageView(getActivity().getBaseContext());
         nave.setImageResource(R.drawable.nave);
         nave.setVisibility(View.INVISIBLE);
-        getActivity().addContentView(nave, new ViewGroup.LayoutParams(200, 200));
+
+        layout = (ViewGroup) root.findViewById(R.id.constraint);
+        layout.addView(nave,new ViewGroup.LayoutParams(200, 200));
+
         j = new Contador();
         m = new Meteoros();
         btnStart.setOnClickListener(this);
@@ -103,7 +111,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private boolean moverNaveDer(View view, MotionEvent motionEvent) {
-
         if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
             if( nave.getX() - 20f < -39.00) {
                 nave.setX(-39.00f);
@@ -152,10 +159,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         btnLeft.setVisibility(View.VISIBLE);
         btnRight.setVisibility(View.VISIBLE);
         nave.setX(420);
-        nave.setY(1500);
+        nave.setY(1300);
         nave.setVisibility(View.VISIBLE);
+        j.setPriority(1);
+        m.setPriority(2);
         j.start();
-        m.start();
+        //m.start();
     }
 
 
@@ -205,9 +214,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void run() {
                             // Generar Randomico
-                            double a = 1 + (Math.random() * getView().getWidth() - 150);
+                            double a = 150 + (Math.random() * getView().getWidth() - 150);
                             String randomico = String.valueOf(a);
-                            ImageView meteoro = new ImageView(getContext());
+                            ImageView meteoro = new ImageView(getActivity());
                             meteoro.setX(Float.parseFloat(randomico));
                             meteoro.setY(240);
                             meteoro.setTop(100);

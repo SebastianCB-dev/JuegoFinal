@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
@@ -80,8 +81,8 @@
         android:layout_marginTop="520dp"
         android:backgroundTint="#2267C100"
         android:text="L"
-        android:textSize="25sp"
         android:textColor="#74FFFFFF"
+        android:textSize="25sp"
         android:visibility="invisible"
         app:cornerRadius="50dp"
         app:layout_constraintStart_toStartOf="parent"
