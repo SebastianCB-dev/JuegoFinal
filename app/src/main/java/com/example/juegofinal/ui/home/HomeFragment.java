@@ -209,6 +209,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         public void run() {
 
+            new Timer().scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
                     getActivity().runOnUiThread(new Runnable() {
 
                         @Override
@@ -223,12 +226,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             //meteoro.setTop(100);
                             //meteoro.setRight(100);
                             layout = (ViewGroup) getActivity().findViewById(R.id.constraint);
-                            layout.addView(meteoro,new ViewGroup.LayoutParams(100, 100));
+                            layout.addView(meteoro, new ViewGroup.LayoutParams(100, 100));
 
-                            new Timer().scheduleAtFixedRate(new TimerTask(){
+                            new Timer().scheduleAtFixedRate(new TimerTask() {
                                 @Override
-                                public void run(){
-                                    meteoro.setY(meteoro.getY()+ 1);
+                                public void run() {
+                                    meteoro.setY(meteoro.getY() + 1);
                                     //Choque
                                     // Dimension de nave:    X: 106   Y:80
                                     // Dimension de meteoro: X: 100   Y:100
@@ -236,11 +239,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                                     nave.getHitRect(R1);
 
-                                    Rect R2=new Rect();
+                                    Rect R2 = new Rect();
                                     meteoro.getHitRect(R2);
 
                                     //Colisión
-                                    if (Rect.intersects(R1,R2)) {
+                                    if (Rect.intersects(R1, R2)) {
                                         try {
                                             this.cancel();
                                             j.aumento = 0;
@@ -257,11 +260,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                                     String puntaje = String.valueOf(j.getContador());
                                                     String id = User.id;
                                                     String username = User.username;
-                                                    String url = "http://192.168.0.4/videojuego_moviles/score.php?username="+
-                                                           username.trim()+"&id="+
-                                                            id+"&points="+
+                                                    String url = "http://192.168.0.4/videojuego_moviles/score.php?username=" +
+                                                            username.trim() + "&id=" +
+                                                            id + "&points=" +
                                                             puntaje;
-                                                    url.replace(" ","%20");
+                                                    url.replace(" ", "%20");
                                                     RequestQueue request;
                                                     JsonObjectRequest jsonObjectRequest;
                                                     request = Volley.newRequestQueue(getContext());
@@ -288,7 +291,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                             });
 
 
-
                                         } catch (Throwable throwable) {
                                             throwable.printStackTrace();
                                         }
@@ -296,10 +298,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                                     }
 
-                                    if(meteoro.getY() > getView().getHeight() - 30 ) {
+                                    if (meteoro.getY() > getView().getHeight() - 30) {
                                         meteoro.setVisibility(View.INVISIBLE);
                                         j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
-                                        try{
+                                        try {
                                             this.cancel();
                                         } catch (Throwable throwable) {
                                             throwable.printStackTrace();
@@ -307,14 +309,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                                     }
                                 }
-                            },10,10);
+                            }, 10, 10);
                         }
                     });
 
 
-
-
-
+                }
+            },1000,10000);
         }
 
     }
