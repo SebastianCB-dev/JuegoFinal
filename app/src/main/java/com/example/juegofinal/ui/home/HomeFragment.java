@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     MediaPlayer mMediaPlayer;
     int mCurrentVideoPosition;
 
-    Button btnStart,btnLeft,btnRight;
+    Button btnStart, btnLeft, btnRight;
     ImageView nave;
     TextView tvPuntaje, tvPuntajeFinal, tvGameOver, tvtuPuntajeFue;
     Contador j;
@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         nave.setVisibility(View.INVISIBLE);
 
         layout = (ViewGroup) root.findViewById(R.id.constraint);
-        layout.addView(nave,new ViewGroup.LayoutParams(200, 200));
+        layout.addView(nave, new ViewGroup.LayoutParams(200, 200));
 
         j = new Contador();
         m = new Meteoros();
@@ -111,11 +111,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private boolean moverNaveDer(View view, MotionEvent motionEvent) {
-        if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-            if( nave.getX() - 20f < -2.00) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            if (nave.getX() - 20f < -2.00) {
                 nave.setX(-2.00f);
-            }
-            else {
+            } else {
                 nave.setX(nave.getX() - 20f);
             }
         }
@@ -124,13 +123,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private boolean moverNaveIzq(View view, MotionEvent motionEvent) {
-        if(motionEvent.getAction() == MotionEvent.ACTION_UP
+        if (motionEvent.getAction() == MotionEvent.ACTION_UP
         ) {
-            if( nave.getX() + 20f > 890.00) {
+            if (nave.getX() + 20f > 890.00) {
                 nave.setX(890.00f);
 
-            }
-            else {
+            } else {
                 nave.setX(nave.getX() + 20f);
             }
         }
@@ -138,7 +136,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return true;
     }
     //nave.setX(nave.getX() - 3f);
-    
+
 
     @Override
     public void onPause() {
@@ -171,6 +169,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public class Contador extends Thread {
         public int contador = 0;
         public int aumento = 1;
+
         public int getContador() {
             return this.contador;
         }
@@ -187,16 +186,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             this.contador = contador;
         }
 
-        public Contador() { }
+        public Contador() {
+        }
 
         public void run() {
-            new Timer().scheduleAtFixedRate(new TimerTask(){
+            new Timer().scheduleAtFixedRate(new TimerTask() {
                 @Override
-                public void run(){
+                public void run() {
                     tvPuntaje.setText(String.valueOf(getContador()));
-                    setContador(getContador() + aumento );
+                    setContador(getContador() + aumento);
                 }
-            },1000,1000);
+            }, 1000, 1000);
 
         }
 
@@ -205,117 +205,119 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public class Meteoros extends Thread {
 
-        public Meteoros() { }
+        public Meteoros() {
+        }
 
         public void run() {
 
-            new Timer().scheduleAtFixedRate(new TimerTask() {
+            getActivity().runOnUiThread(new Runnable() {
+
                 @Override
                 public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
+                    // Generar Randomico
+                    double a = 100 + (Math.random() * getView().getWidth() - 50);
+                    String randomico = String.valueOf(a);
+                    ImageView meteoro = new ImageView(getActivity().getBaseContext());
+                    meteoro.setImageResource(R.drawable.asteroid);
+                    meteoro.setX(Float.parseFloat(randomico));
+                    meteoro.setY(0);
+                    //meteoro.setTop(100);
+                    //meteoro.setRight(100);
+                    layout = (ViewGroup) getActivity().findViewById(R.id.constraint);
+                    layout.addView(meteoro, new ViewGroup.LayoutParams(100, 100));
 
+                    new Timer().scheduleAtFixedRate(new TimerTask() {
                         @Override
                         public void run() {
-                            // Generar Randomico
-                            double a = 150 + (Math.random() * getView().getWidth() - 150);
-                            String randomico = String.valueOf(a);
-                            ImageView meteoro = new ImageView(getActivity().getBaseContext());
-                            meteoro.setImageResource(R.drawable.asteroid);
-                            meteoro.setX(Float.parseFloat(randomico));
-                            meteoro.setY(50);
-                            //meteoro.setTop(100);
-                            //meteoro.setRight(100);
-                            layout = (ViewGroup) getActivity().findViewById(R.id.constraint);
-                            layout.addView(meteoro, new ViewGroup.LayoutParams(100, 100));
+                            meteoro.setY(meteoro.getY() + 1);
+                            //Choque
+                            // Dimension de nave:    X: 106   Y:80
+                            // Dimension de meteoro: X: 100   Y:100
+                            Rect R1 = new Rect();
 
-                            new Timer().scheduleAtFixedRate(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    meteoro.setY(meteoro.getY() + 1);
-                                    //Choque
-                                    // Dimension de nave:    X: 106   Y:80
-                                    // Dimension de meteoro: X: 100   Y:100
-                                    Rect R1 = new Rect();
+                            nave.getHitRect(R1);
 
-                                    nave.getHitRect(R1);
+                            Rect R2 = new Rect();
+                            meteoro.getHitRect(R2);
 
-                                    Rect R2 = new Rect();
-                                    meteoro.getHitRect(R2);
+                            //Colisión
+                            if (Rect.intersects(R1, R2)) {
+                                try {
+                                    this.cancel();
+                                    j.aumento = 0;
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            btnLeft.setVisibility(View.INVISIBLE);
+                                            btnRight.setVisibility(View.INVISIBLE);
+                                            getActivity().findViewById(R.id.tvGameOver).setVisibility(View.VISIBLE);
+                                            getActivity().findViewById(R.id.tvTuPuntajeFue).setVisibility(View.VISIBLE);
+                                            tvPuntajeFinal.setText(String.valueOf(j.getContador()));
+                                            getActivity().findViewById(R.id.tvPuntajeFinal).setVisibility(View.VISIBLE);
 
-                                    //Colisión
-                                    if (Rect.intersects(R1, R2)) {
-                                        try {
-                                            this.cancel();
-                                            j.aumento = 0;
-                                            getActivity().runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    btnLeft.setVisibility(View.INVISIBLE);
-                                                    btnRight.setVisibility(View.INVISIBLE);
-                                                    getActivity().findViewById(R.id.tvGameOver).setVisibility(View.VISIBLE);
-                                                    getActivity().findViewById(R.id.tvTuPuntajeFue).setVisibility(View.VISIBLE);
-                                                    tvPuntajeFinal.setText(String.valueOf(j.getContador()));
-                                                    getActivity().findViewById(R.id.tvPuntajeFinal).setVisibility(View.VISIBLE);
-
-                                                    String puntaje = String.valueOf(j.getContador());
-                                                    String id = User.id;
-                                                    String username = User.username;
-                                                    String url = "http://192.168.0.4/videojuego_moviles/score.php?username=" +
-                                                            username.trim() + "&id=" +
-                                                            id + "&points=" +
-                                                            puntaje;
-                                                    url.replace(" ", "%20");
-                                                    RequestQueue request;
-                                                    JsonObjectRequest jsonObjectRequest;
-                                                    request = Volley.newRequestQueue(getContext());
-                                                    jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this::scoreResponse, this::scoreResponseError);
-                                                    request.add(jsonObjectRequest);
-                                                }
-
-                                                private void scoreResponseError(VolleyError volleyError) {
-                                                    Snackbar.make(getView(), "Error al realizar la petición!", Snackbar.LENGTH_LONG)
-                                                            .setAction("Action", null).show();
-                                                }
-
-                                                private void scoreResponse(JSONObject jsonObject) {
-
-                                                    try {
-                                                        jsonObject.getJSONArray("user").getJSONObject(0).get("score_user_username").toString();
-                                                    } catch (JSONException e) {
-                                                        Snackbar.make(getView(), "Ocurrio un error contacte al administrador!", Snackbar.LENGTH_LONG)
-                                                                .setAction("Action", null).show();
-                                                    }
-
-                                                }
-
-                                            });
-
-
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
+                                            String puntaje = String.valueOf(j.getContador());
+                                            String id = User.id;
+                                            String username = User.username;
+                                            String url = "http://192.168.0.4/videojuego_moviles/score.php?username=" +
+                                                    username.trim() + "&id=" +
+                                                    id + "&points=" +
+                                                    puntaje;
+                                            url.replace(" ", "%20");
+                                            RequestQueue request;
+                                            JsonObjectRequest jsonObjectRequest;
+                                            request = Volley.newRequestQueue(getContext());
+                                            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this::scoreResponse, this::scoreResponseError);
+                                            request.add(jsonObjectRequest);
                                         }
 
-
-                                    }
-
-                                    if (meteoro.getY() > getView().getHeight() - 30) {
-                                        meteoro.setVisibility(View.INVISIBLE);
-                                        j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
-                                        try {
-                                            this.cancel();
-                                        } catch (Throwable throwable) {
-                                            throwable.printStackTrace();
+                                        private void scoreResponseError(VolleyError volleyError) {
+                                            Snackbar.make(getView(), "Error al realizar la petición!", Snackbar.LENGTH_LONG)
+                                                    .setAction("Action", null).show();
                                         }
 
-                                    }
+                                        private void scoreResponse(JSONObject jsonObject) {
+
+                                            try {
+                                                jsonObject.getJSONArray("user").getJSONObject(0).get("score_user_username").toString();
+                                            } catch (JSONException e) {
+                                                Snackbar.make(getView(), "Ocurrio un error contacte al administrador!", Snackbar.LENGTH_LONG)
+                                                        .setAction("Action", null).show();
+                                            }
+
+                                        }
+
+                                    });
+
+
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
                                 }
-                            }, 10, 10);
+
+
+                            }
+
+                            if (meteoro.getY() > getView().getHeight() - 30) {
+                                getActivity().runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        layout.removeView(meteoro);
+                                    }
+                                    });
+
+                                j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
+                                try {
+                                    this.cancel();
+                                    m.run();
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
+
+                            }
                         }
-                    });
-
-
+                    }, 10, 10);
                 }
-            },1000,10000);
+            });
         }
 
     }
