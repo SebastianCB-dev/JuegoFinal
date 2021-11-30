@@ -150,6 +150,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         //videoBG.start();
     }
 
+    @Override
+    public void onDestroyView() {
+        try {
+            m.suspend();
+            j.suspend();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        super.onDestroyView();
+
+    }
+
+
     //Comienze el juego"
     @Override
     public void onClick(View v) {
@@ -250,10 +264,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                         public void run() {
                                             btnLeft.setVisibility(View.INVISIBLE);
                                             btnRight.setVisibility(View.INVISIBLE);
-                                            getActivity().findViewById(R.id.tvGameOver).setVisibility(View.VISIBLE);
-                                            getActivity().findViewById(R.id.tvTuPuntajeFue).setVisibility(View.VISIBLE);
-                                            tvPuntajeFinal.setText(String.valueOf(j.getContador()));
-                                            getActivity().findViewById(R.id.tvPuntajeFinal).setVisibility(View.VISIBLE);
+                                            try {
+                                                getActivity().findViewById(R.id.tvGameOver).setVisibility(View.VISIBLE);
+                                                getActivity().findViewById(R.id.tvTuPuntajeFue).setVisibility(View.VISIBLE);
+                                                tvPuntajeFinal.setText(String.valueOf(j.getContador()));
+                                                getActivity().findViewById(R.id.tvPuntajeFinal).setVisibility(View.VISIBLE);
+                                            } catch (Exception e) {
+
+                                            }
+
 
                                             String puntaje = String.valueOf(j.getContador());
                                             String id = User.id;
@@ -295,25 +314,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
                             }
+                            try {
+                                if (meteoro.getY() > getView().getHeight() - 30) {
+                                    getActivity().runOnUiThread(new Runnable() {
 
-                            if (meteoro.getY() > getView().getHeight() - 30) {
-                                getActivity().runOnUiThread(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        layout.removeView(meteoro);
-                                    }
+                                        @Override
+                                        public void run() {
+                                            layout.removeView(meteoro);
+                                        }
                                     });
 
-                                j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
-                                try {
-                                    this.cancel();
-                                    m.run();
-                                } catch (Throwable throwable) {
-                                    throwable.printStackTrace();
+                                    j.contador = Integer.parseInt(tvPuntaje.getText().toString()) + 50;
+                                    try {
+                                        this.cancel();
+                                        m.run();
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
+
                                 }
+                            } catch (NumberFormatException e) {
 
                             }
+                            catch (Exception e ) {
+
+                            }
+
                         }
                     }, 10, 10);
                 }

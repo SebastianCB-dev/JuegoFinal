@@ -103,7 +103,7 @@ public class GalleryFragment extends Fragment {
                                 .setAction("Action", null).show();
         }
         String userid, points, username;
-        if(responseDataLength >= 10 ) {
+        if( responseDataLength >= 10 ) {
             responseDataLength = 10;
         }
         for(int i = 0; i < responseDataLength; i++ ) {
